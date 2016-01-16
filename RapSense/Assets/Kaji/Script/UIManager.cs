@@ -9,13 +9,14 @@ public class UIManager : MonoBehaviour {
 	[SerializeField]
 	private int nowPlayer = 0;
 	[SerializeField]
-	private Text textCountdown;
+	private Text textCountdown, textCountdown2;
+	[SerializeField]
+	private GameObject nowText1,nowText2;
 
 	void Start(){
 		Panel1.SetActive(false);
 		Panel2.SetActive(true);
-		nowPlayer = 1;
-		StartCoroutine(CountdownCoroutine());
+		ChangeTurn();
 	}
 
 	void ChangeTurn(){
@@ -23,10 +24,12 @@ public class UIManager : MonoBehaviour {
 			Panel1.SetActive(true);
 			Panel2.SetActive(false);
 			nowPlayer = 2;
-		}else if(nowPlayer == 2){
+			StartCoroutine(CountdownCoroutine(textCountdown2));
+		}else{
 			Panel1.SetActive(false);
 			Panel2.SetActive(true);
 			nowPlayer = 1;
+			StartCoroutine(CountdownCoroutine(textCountdown));
 		}
 	}
 
@@ -34,28 +37,34 @@ public class UIManager : MonoBehaviour {
 		yield return new WaitForSeconds(sec);
 		ChangeTurn();
 	}
-	public void OnClickButtonStart()
+
+
+	IEnumerator CountdownCoroutine(Text countdown)
 	{
-		StartCoroutine(CountdownCoroutine());
-	}
 
-IEnumerator CountdownCoroutine()
-	{
-		textCountdown.gameObject.SetActive(true);
+		yield return new WaitForSeconds(2f);
 
-		textCountdown.text = "3";
+		countdown.gameObject.SetActive(true);
+
+		countdown.text = "3";
 		yield return new WaitForSeconds(1.0f);
 
-		textCountdown.text = "2";
+		countdown.text = "2";
 		yield return new WaitForSeconds(1.0f);
 
-		textCountdown.text = "1";
+		countdown.text = "1";
 		yield return new WaitForSeconds(1.0f);
 
-		textCountdown.text = "GO!";
+		countdown.text = "GO!";
 		yield return new WaitForSeconds(1.0f);
 
-		textCountdown.text = "";
-		textCountdown.gameObject.SetActive(false);
+		countdown.text = "";
+		countdown.gameObject.SetActive(false);
+		if(nowPlayer == 1){
+			StartCoroutine(ChangeTurnSpan(nowText1.GetComponent<TextSpan>().spanTime));
+		}else{
+			StartCoroutine(ChangeTurnSpan(nowText2.GetComponent<TextSpan>().spanTime));
+
+		}
 	}
 }
