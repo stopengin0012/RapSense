@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Saitoh/Scenes/testScene.unity
+- path: Assets/Kaji/Scene/UI.unity
   isLoaded: 1
   isActive: 1
