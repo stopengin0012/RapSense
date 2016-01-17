@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Saitoh/Scenes/testScene.unity
+- path: Assets/Saitoh/Scenes/SingleHandTest.unity
   isLoaded: 1
   isActive: 1
