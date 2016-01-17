@@ -18,7 +18,8 @@ public class GestureRecognition : MonoBehaviour {
     //手元、親指(の先)、中指、小指(_つきは元情報を格納、_なしはwristからの相対位置を示す)
     Vector3 _left_wrist_pos, _left_thumb_pos, _left_middle_pos, _left_pinky_pos;
     Vector3 left_thumb_pos, left_middle_pos, left_pinky_pos;
-    GameObject _left_wrist, _left_thumb, _left_middle, _left_pinky; //元データ取得のためのGameObject
+    //GameObject _left_wrist, _left_thumb, _left_middle, _left_pinky; //元データ取得のためのGameObject
+    GameObject[] _lefthand_gobj; //元データ取得のためのGameObject
     Vector3 left_wrist_acc, left_thumb_acc, left_middle_acc, left_pinky_acc;
 
     //基底遷移アルゴリズムによる加速度計算用の関節位置の配列[4つの関節,3軸]
@@ -27,7 +28,8 @@ public class GestureRecognition : MonoBehaviour {
     NoiseReduction[][] nr;
     private int nr_nFIFO = 10;  //何個前の位置情報から加速度を推定するか：10の場合2秒間の残像
 
-
+    GameObject heart_particle_gobj, star_particle_gobj; //パーティクル
+    GameObject[] particle_finger;
 
     #endregion
 
@@ -36,12 +38,17 @@ public class GestureRecognition : MonoBehaviour {
     void Start () {
         systemAdmin = SystemAdmin.Instance;   //システムインスタンス(シングルトン)の生成
 
-        _left_wrist = GameObject.Find("first_left_wrist");
-        _left_thumb = GameObject.Find("first_left_thumb-tip");
-        _left_middle = GameObject.Find("first_left_middle-tip");
-        _left_pinky = GameObject.Find("first_left_pinky-tip");
+        _lefthand_gobj = new GameObject[4];
+        _lefthand_gobj[0] = GameObject.Find("first_left_wrist");
+        _lefthand_gobj[1] = GameObject.Find("first_left_thumb-tip");
+        _lefthand_gobj[2] = GameObject.Find("first_left_middle-tip");
+        _lefthand_gobj[3] = GameObject.Find("first_left_pinky-tip");
 
         NRinitialize();     //基底遷移アルゴリズムによる加速度計算用配列の初期化
+
+        particle_finger = new GameObject[4];
+        heart_particle_gobj = Resources.Load("Prehab/Hearts") as GameObject;
+        generateParticle(heart_particle_gobj, 0, true);
     }
 
     //基底遷移アルゴリズムによる加速度計算用配列の初期化
@@ -62,10 +69,10 @@ public class GestureRecognition : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //RealSenseからの直接のデータを取得
-        _left_wrist_pos = _left_wrist.transform.position;
-        _left_thumb_pos = _left_thumb.transform.position;
-        _left_middle_pos = _left_middle.transform.position;
-        _left_pinky_pos = _left_pinky.transform.position;
+        _left_wrist_pos = _lefthand_gobj[0].transform.position;
+        _left_thumb_pos = _lefthand_gobj[1].transform.position;
+        _left_middle_pos = _lefthand_gobj[2].transform.position;
+        _left_pinky_pos = _lefthand_gobj[3].transform.position;
 
         //wristを中心とした相対位置情報に変換
         left_thumb_pos = _left_thumb_pos - _left_wrist_pos;
@@ -86,9 +93,52 @@ public class GestureRecognition : MonoBehaviour {
         left_pinky_acc = new Vector3((float)nr[3][0].getD(), (float)nr[3][1].getD(), (float)nr[3][2].getD());
         #endregion
 
+        //パーティクル位置の指への追跡
+        for (int i = 0; i < 4; i++) {
+            if (particle_finger[i] != null) particle_finger[i].transform.position = _lefthand_gobj[i].transform.position;
+        }
+    }
+
+    /// <summary>
+    /// パーティクルを指定した指の位置へ生成する関数
+    /// </summary>
+    /// <param name="particle_gobj">発生させるパーティクル</param>
+    /// <param name="trac">追跡する指(0:wrist ~ )</param>
+    /// <param name="isContinue">追跡するかどうか</param>
+    void generateParticle(GameObject particle_gobj, int trac, bool isContinue)
+    {
+        GameObject p_ins;
+
+        switch (trac) {
+            case 0:
+                p_ins = (GameObject)Instantiate(particle_gobj, _left_wrist_pos, Quaternion.identity);
+                if (isContinue) particle_finger[trac] = p_ins;      //追跡する場合、パーティクルを指に登録する
+                break;
+            case 1:
+                p_ins = (GameObject)Instantiate(particle_gobj, _left_thumb_pos, Quaternion.identity);
+                if (isContinue) particle_finger[trac] = p_ins;      //追跡する場合、パーティクルを指に登録する
+                break;
+            case 2:
+                p_ins = (GameObject)Instantiate(particle_gobj, _left_middle_pos, Quaternion.identity);
+                if (isContinue) particle_finger[trac] = p_ins;      //追跡する場合、パーティクルを指に登録する
+                break;
+            case 3:
+                p_ins = (GameObject)Instantiate(particle_gobj, _left_pinky_pos, Quaternion.identity);
+                if (isContinue) particle_finger[trac] = p_ins;      //追跡する場合、パーティクルを指に登録する
+                break;
+            default:
+                break;
+
+
+        }
 
     }
 
+
+
+    /// <summary>
+    /// デバッグ用
+    /// </summary>
     void OnGUI()
     {
         // GUIの見た目を変える。
@@ -124,11 +174,11 @@ public class GestureRecognition : MonoBehaviour {
             GUI.Label(new Rect(0, 90, 180, 30), "_pinkypos:(" + _left_pinky_pos.x + "," + _left_pinky_pos.y + "," + _left_pinky_pos.z + ")", guiStyle);
             */
             GUI.Label(new Rect(0, 120, 180, 30), 
-                "wristAcc_X:" + FloorFloat(left_wrist_acc.x,4).ToString("f2"), guiStyle);
+                "wristAcc_X:" + left_wrist_acc.x.ToString("f2"), guiStyle);
             GUI.Label(new Rect(0, 150, 180, 30),
-                "wristAcc_Y:" + FloorFloat(left_wrist_acc.y, 4).ToString("f2"), guiStyle);
+                "wristAcc_Y:" + left_wrist_acc.y.ToString("f2"), guiStyle);
             GUI.Label(new Rect(0, 180, 180, 30),
-                "wristAcc_Z:" + FloorFloat(left_wrist_acc.z, 4).ToString("f2"), guiStyle);
+                "wristAcc_Z:" + left_wrist_acc.z.ToString("f2"), guiStyle);
             /*
             GUI.Label(new Rect(0, 150, 180, 30), 
                 "thumbAcc:(" + FloorFloat(left_thumb_acc.x,4).ToString("f2") + "," + FloorFloat(left_thumb_acc.y,4).ToString("f2") + "," + FloorFloat(left_thumb_acc.z,4).ToString("f2") + ")", guiStyle);

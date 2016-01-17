@@ -159,13 +159,13 @@ EllipsoidParticleEmitter:
   serializedVersion: 2
   m_Enabled: 1
   m_Emit: 1
-  minSize: 0.02
-  maxSize: 0.07
+  minSize: 0.5
+  maxSize: 1
   minEnergy: 0.5
   maxEnergy: 3
   minEmission: 20
   maxEmission: 30
-  worldVelocity: {x: 0, y: 0.2, z: 0}
+  worldVelocity: {x: 0, y: 1, z: 0}
   localVelocity: {x: 0, y: 0, z: 0}
   rndVelocity: {x: 0.5, y: 0.5, z: 0.5}
   emitterVelocityScale: 0.05
@@ -186,13 +186,13 @@ EllipsoidParticleEmitter:
   serializedVersion: 2
   m_Enabled: 1
   m_Emit: 1
-  minSize: 0.02
-  maxSize: 0.07
+  minSize: 0.5
+  maxSize: 1
   minEnergy: 0.5
   maxEnergy: 3
   minEmission: 50
   maxEmission: 80
-  worldVelocity: {x: 0, y: 0.63, z: 0}
+  worldVelocity: {x: 0, y: 1, z: 0}
   localVelocity: {x: 0, y: 0, z: 0}
   rndVelocity: {x: 0.5, y: 0.5, z: 0.5}
   emitterVelocityScale: 0.05
@@ -295,7 +295,19 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: minSize
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: maxSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: worldVelocity.y
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 134644}
