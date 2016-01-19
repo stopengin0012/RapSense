@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour {
 	[SerializeField]
 	private Image[] nowStage;
 	[SerializeField]
-	private int nowStageNum=0;
+	private int nowStageNum=-1;
 	[SerializeField]
 	private bool endStage = false;
 
@@ -24,8 +24,21 @@ public class UIManager : MonoBehaviour {
 	}
 
 	void Update(){
-
 	}
+
+	void TurnOnNowStageBar(){
+		iTween.ValueTo(gameObject, iTween.Hash(
+			"from", 0f
+			, "to", 1f
+			, "time", 1f
+			, "onupdate", "SetAlpha"  // 毎フレーム SetAlpha() を呼びます。
+		));
+		nowStageNum ++;
+	}
+	void SetAlpha(float alpha){
+		nowStage[nowStageNum].color = new Color (255,255,255,alpha);
+	}
+
 
 	void ChangeTurn(){
 		if(nowPlayer == 1){
@@ -34,10 +47,11 @@ public class UIManager : MonoBehaviour {
 			nowPlayer = 2;
 			StartCoroutine(CountdownCoroutine(textCountdown2));
 		}else{
-			endStage = true;
+			TurnOnNowStageBar();
 			Panel1.SetActive(false);
 			Panel2.SetActive(true);
 			nowPlayer = 1;
+
 			StartCoroutine(CountdownCoroutine(textCountdown));
 		}
 	}
