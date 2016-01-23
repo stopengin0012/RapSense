@@ -28,6 +28,8 @@ public class UIManager : MonoBehaviour {
 	[SerializeField]
 	private GameObject StageSprite;
 	private Vector3 stageSpriteInitPos;
+
+
 	private bool end2p = false;
 
 	private bool inEnd = false;
@@ -134,6 +136,7 @@ public class UIManager : MonoBehaviour {
 	}
 
 	void SetPanel1(){
+		AudioManager.Instance.PlaySE("shutter");
 		iTween.ValueTo(gameObject, iTween.Hash(
 			"from", 0f
 			, "to", 500f
@@ -141,15 +144,8 @@ public class UIManager : MonoBehaviour {
 			, "onupdate", "SetPanelPos1"  // 毎フレーム SetAlpha() を呼びます。
 		));
 	}
-	void SetPanel2(){
-		iTween.ValueTo(gameObject, iTween.Hash(
-			"from", 0f
-			, "to", 500f
-			, "time", 1f
-			, "onupdate", "SetPanelPos2"  // 毎フレーム SetAlpha() を呼びます。
-		));
-	}
 	void OutPanel2(){
+		AudioManager.Instance.PlaySE("shutter");
 		iTween.ValueTo(gameObject, iTween.Hash(
 			"from", 500f
 			, "to", 0f
@@ -158,6 +154,7 @@ public class UIManager : MonoBehaviour {
 		));
 	}
 	void SetPanelCh1(){
+		AudioManager.Instance.PlaySE("shutter");
 		iTween.ValueTo(gameObject, iTween.Hash(
 			"from", 0f
 			, "to", 500f
@@ -171,20 +168,7 @@ public class UIManager : MonoBehaviour {
 			, "onupdate", "SetPanelPos1"  // 毎フレーム SetAlpha() を呼びます。
 		));
 	}
-	void SetPanelCh2(){
-		iTween.ValueTo(gameObject, iTween.Hash(
-			"from", 0f
-			, "to", 500f
-			, "time", 1f
-			, "onupdate", "SetPanelPos1"  // 毎フレーム SetAlpha() を呼びます。
-		));
-		iTween.ValueTo(gameObject, iTween.Hash(
-			"from", 500f
-			, "to", 0f
-			, "time", 1f
-			, "onupdate", "SetPanelPos2"  // 毎フレーム SetAlpha() を呼びます。
-		));
-	}
+
 	void SetPanelPos1(float yPos){
 		Vector3 temp = Panel1.GetComponent<RectTransform>().localPosition;
 		temp.y = yPos;
