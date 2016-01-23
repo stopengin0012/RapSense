@@ -7,7 +7,6 @@ using System.Collections;
 /// </summary>
 public class CalcACF : MonoBehaviour {
 
-    double[] in_acf_x, in_acf_y, in_acf_z;
     double[] acf_x, acf_y, acf_z;
 
     // Use this for initialization
@@ -20,8 +19,34 @@ public class CalcACF : MonoBehaviour {
 	
 	}
 
-    double[] autocorr(double[] input) {
+    public double[] autocorr_vec3(Vector3[] input) {
+
+        double[] ret;
+        ret = new double[3];
+        for (int i=0; i<3; i++) {
+            ret[i] = 0.0d;
+        }
+
+        double[] in_x = new double[input.Length];
+        double[] in_y = new double[input.Length];
+        double[] in_z = new double[input.Length];
+        for (int i = 0; i < input.Length; i++) {
+            in_x[i] = (double)input[i].x;
+            in_y[i] = (double)input[i].y;
+            in_z[i] = (double)input[i].z;
+        }
+
+        ret[0] = calcFirstPeak(autocorr(in_x));
+        ret[1] = calcFirstPeak(autocorr(in_y));
+        ret[2] = calcFirstPeak(autocorr(in_z));
+
+        return ret;
+
+    }
+
+    public double[] autocorr(double[] input) {
         double[] autocorrfunc = {};
+        double[] ret_autocorrfunc = { };
         double s;    //Σ用
 
         int N, n;
@@ -29,7 +54,8 @@ public class CalcACF : MonoBehaviour {
         N = n / 2;          // N = 2n
 
         autocorrfunc = new double[n];
-        Debug.Log("N:" + N + ", n:"+n);
+        ret_autocorrfunc = new double[n];
+        //Debug.Log("N:" + N + ", n:"+n);
 
         //単純な自己相関の算出
         //A(t) = input(t) * input(t * tau)
@@ -49,10 +75,33 @@ public class CalcACF : MonoBehaviour {
         //-1 ~ +1 になるように正規化
         for (int j = 0; j < N; j++)
         {
-            autocorrfunc[j] = autocorrfunc[j] / autocorrfunc[0];
+            //Debug.Log("autocorrfunc[" + j + "]:" + autocorrfunc[j]+","+ "autocorrfunc[0]:"+ autocorrfunc[0]);
+            ret_autocorrfunc[j] = autocorrfunc[j] / autocorrfunc[0];
+            //autocorrfunc[j] = autocorrfunc[j] / autocorrfunc[0];
         }
 
-        return autocorrfunc;
+        return ret_autocorrfunc;
+        //return autocorrfunc;
+
+    }
+
+    public double calcFirstPeak(double[] autocorr) {
+        double ret = 0.0d;
+
+        int i = 0;
+
+        while (autocorr[i] > autocorr[i + 1]) {
+            i += 1;
+        }
+
+        while (autocorr[i] < autocorr[i + 1]) {
+            i += 1;
+        }
+
+        ret = autocorr[i]; 
+
+        return ret;
         
     }
+
 }

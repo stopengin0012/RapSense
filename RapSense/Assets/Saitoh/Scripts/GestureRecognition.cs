@@ -26,11 +26,19 @@ public class GestureRecognition : MonoBehaviour {
     // 0: wrist, 1:thumb, 2:middle, 3:pinky
     //(注)ただし、wristだけはカメラからの位置を用いる
     NoiseReduction[][] nr;
-    private int nr_nFIFO = 10;  //何個前の位置情報から加速度を推定するか：10の場合2秒間の残像
+    private int nr_nFIFO = 5;  //何個前の位置情報から加速度を推定するか：10の場合2秒間の残像
+
+
+    //自己相関関数の値
+    double[][] ACFValue;             //4つの関節, 3軸
+    Vector3[][] ACFFIFOStack;       //4つの関節, スタックする数
+    int StackNum = 128;
+    int[] StackCount;
+    bool isStackFull = false;
+    CalcACF calcACF;
 
     GameObject heart_particle_gobj, star_particle_gobj; //パーティクル
     GameObject[] particle_finger;
-
     #endregion
 
 
@@ -45,9 +53,11 @@ public class GestureRecognition : MonoBehaviour {
         _lefthand_gobj[3] = GameObject.Find("first_left_pinky-tip");
 
         NRinitialize();     //基底遷移アルゴリズムによる加速度計算用配列の初期化
+        ACFinitialize();    //自己相関関数計算用配列の初期化
+
 
         particle_finger = new GameObject[4];
-        heart_particle_gobj = Resources.Load("Prehab/Hearts") as GameObject;
+        heart_particle_gobj = Resources.Load("Prehab/Confetti") as GameObject;
         generateParticle(heart_particle_gobj, 0, true);
     }
 
@@ -65,9 +75,37 @@ public class GestureRecognition : MonoBehaviour {
             }
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    //自己相関関数計算用配列の初期化
+    void ACFinitialize()
+    {
+        ACFValue = new double[4][];
+        StackCount = new int[4];
+        for (int i = 0; i < 4; i++)
+        {
+            ACFValue[i] = new double[3];
+            StackCount[i] = 0;
+
+            for (int j = 0; j < 3; j++) {
+                ACFValue[i][j] = 0.0d;
+            }
+        }
+
+        ACFFIFOStack = new Vector3[4][];
+        for (int i = 0; i < 4; i++)
+        {
+            ACFFIFOStack[i] = new Vector3[StackNum];
+
+            for (int j = 0; j < StackNum; j++) {
+                ACFFIFOStack[i][j] = Vector3.zero;
+            }
+        }
+
+        calcACF = new CalcACF();
+    }
+
+    // Update is called once per frame
+    void Update () {
         //RealSenseからの直接のデータを取得
         _left_wrist_pos = _lefthand_gobj[0].transform.position;
         _left_thumb_pos = _lefthand_gobj[1].transform.position;
@@ -96,6 +134,81 @@ public class GestureRecognition : MonoBehaviour {
         //パーティクル位置の指への追跡
         for (int i = 0; i < 4; i++) {
             if (particle_finger[i] != null) particle_finger[i].transform.position = _lefthand_gobj[i].transform.position;
+        }
+
+        //自己相関関数計算用のStackに加速度データをFIFOの形で入れる
+        
+        ACFStackIn(0, left_wrist_acc);
+        /*
+        ACFStackIn(1, left_thumb_acc);
+        ACFStackIn(2, left_middle_acc);
+        ACFStackIn(3, left_pinky_acc);
+        */
+
+        //ACFStackIn(0, _left_wrist_pos);
+
+        if (isStackFull) {
+            ACFValue[0] = calcACF.autocorr_vec3(ACFFIFOStack[0]);
+            ACFValue[1] = calcACF.autocorr_vec3(ACFFIFOStack[1]);
+            ACFValue[2] = calcACF.autocorr_vec3(ACFFIFOStack[2]);
+        }
+
+        Debug.Log("acc_y:" + left_wrist_acc.y +"//ave_y_acc:" + CalcAVE(ACFFIFOStack[0]).y);
+        Debug.Log("ave_y_acc:" + CalcAVE(ACFFIFOStack[0]).y + "ACFValue[0][y]:(" + ACFValue[0][1] + ")");
+
+        //if (left_wrist_acc.y > 50 || left_wrist_acc.y < -50) {
+        if (left_wrist_acc.y > 30 || left_wrist_acc.y < -30)
+        {
+            Debug.Log("SLASH!!");
+        }
+
+        
+        
+        
+    }
+
+    //配列の平均を算出するメソッド
+    Vector3 CalcAVE(Vector3[] input) {
+        Vector3 ret_ave = Vector3.zero;
+        Vector3 sum = Vector3.zero;
+
+        for (int i = 0; i < input.Length; i++) {
+            sum += input[i];
+        }
+        ret_ave = sum / input.Length;
+
+        return ret_ave;
+    }
+ 
+
+    //自己相関関数計算用のStackに加速度データをFIFOの形で入れる関数
+    void ACFStackIn(int jointNum, Vector3 data) {
+
+        if (StackCount[jointNum] < StackNum)
+        {
+            ACFFIFOStack[jointNum][StackCount[jointNum]] = data;
+            StackCount[jointNum]++;
+            Debug.Log("StackCount["+ jointNum+"]:"+StackCount[jointNum]);
+        }
+        else {  //FIFOFull
+
+            isStackFull = true;
+
+            for (int i=StackNum;i>0;i--) {
+                //Debug.Log("i:"+i);
+                if (i == StackNum)
+                {
+                    ACFFIFOStack[jointNum][i - 1] = Vector3.zero;
+                    ACFFIFOStack[jointNum][i - 1] = ACFFIFOStack[jointNum][i - 2];
+                }
+                else if (i == 1) {
+                    ACFFIFOStack[jointNum][0] = data;
+                }
+                else {
+                    ACFFIFOStack[jointNum][i - 1] = ACFFIFOStack[jointNum][i - 2];
+                }
+
+            }
         }
     }
 
