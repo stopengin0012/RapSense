@@ -27,7 +27,7 @@ public class GestureRecognition : MonoBehaviour {
     Vector3 left_wrist_acc, left_index_acc, left_thumb_acc, left_middle_acc, left_pinky_acc;
 
     //基底遷移アルゴリズムによる加速度計算用の関節位置の配列[4つの関節,3軸]
-    // 0: wrist, 1:index,, 1:thumb, 2:middle, 3:pinky
+    // 0: wrist, 1:index,, 2:thumb, 3:middle, 4:pinky
     //(注)ただし、wristだけはカメラからの位置を用いる
     NoiseReduction[][] nr;
     private int nr_nFIFO = 5;  //何個前の位置情報から加速度を推定するか：10の場合2秒間の残像
@@ -41,7 +41,7 @@ public class GestureRecognition : MonoBehaviour {
     bool isStackFull = false;
     CalcACF calcACF;
 
-    GameObject heart_particle_gobj, star_particle_gobj, Conf, groundLightsBase, RainbowBallBase; //パーティクル
+    GameObject heart_particle_gobj, star_particle_gobj, Conf, groundLightsBase, RainbowBallBase, shieldBase; //パーティクル
     GameObject[] particle_finger;
 
     GameObject RSManager;
@@ -82,6 +82,7 @@ public class GestureRecognition : MonoBehaviour {
         star_particle_gobj = Resources.Load("Prehab/Stars") as GameObject;
         Conf = Resources.Load("Prehab/Confetti") as GameObject;
         RainbowBallBase = Resources.Load("Prehab/RainbowBallBase") as GameObject;
+        shieldBase = Resources.Load("Prehab/shieldBase") as GameObject;
 
 
         generateParticle(heart_particle_gobj, 0, true);
@@ -206,8 +207,8 @@ public class GestureRecognition : MonoBehaviour {
         double sum__left_wrist_pos = Mathf.Pow(
             (Mathf.Pow(_left_wristDiff_x, 2) + Mathf.Pow(_left_wristDiff_y, 2) + Mathf.Pow(_left_wristDiff_z, 2)), (float)1/2);
 
-        Debug.Log("S:" + sum__left_wrist_pos);
-        if ( isStackFull && sum__left_wrist_pos > 4.5)
+        //Debug.Log("S:" + sum__left_wrist_pos);
+        if ( isStackFull && sum__left_wrist_pos > 6.0)
         {
             Debug.Log("SLASH!!:");
             generateParticle(star_particle_gobj, 0, false);
@@ -223,15 +224,22 @@ public class GestureRecognition : MonoBehaviour {
         }
         //Debug.Log("Diff:" + Mathf.Abs(_left_wrist_pos.y - past_left_middle_pos.y));
 
+        //ちょっとだけのとき
+        double diff_thumb_index = Vector3.Distance(_left_thumb_pos, _left_index_pos);
+        Debug.Log("diff_thumb_index:" + diff_thumb_index);
+        if (isStackFull && diff_thumb_index < 3.3) {
+            generateParticle(shieldBase, 1, false);
+        }
+
         //指の姿勢によるエフェクト
         float left_index_pos_angle = Vector3.Angle(left_index_pos, Vector3.up);
         float left_thumb_pos_angle = Vector3.Angle(left_thumb_pos, Vector3.up);
 
-        Debug.Log("Angle:" + left_index_pos_angle + "," + left_thumb_pos_angle);
+        //Debug.Log("Angle:" + left_index_pos_angle + "," + left_thumb_pos_angle);
 
-        if ((left_index_pos_angle < 15 /*|| left_index_pos_angle > 75*/)
+        if ((left_index_pos_angle < 20 /*|| left_index_pos_angle > 75*/)
             && left_thumb_pos_angle > 15) {
-            Debug.Log("UpSign!!!");
+            //Debug.Log("UpSign!!!");
             ScoreManager.Instance.AddScore(3);
             generateParticle(RainbowBallBase, 1, false);
 
