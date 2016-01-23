@@ -1927,7 +1927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9878c3835f38b44319ef933eda8c5633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 0}
+  uiManager: {fileID: 782107277}
   score1p: 0
   score2p: 0
 --- !u!4 &1125145549

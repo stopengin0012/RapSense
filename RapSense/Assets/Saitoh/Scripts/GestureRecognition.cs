@@ -16,6 +16,7 @@ public class GestureRecognition : MonoBehaviour {
 
     #region Field
     private SystemAdmin systemAdmin;  //システム情報(singleton)
+    //private ScoreManager scoreManager;  //システム情報(singleton)
 
     //手元、親指(の先)、中指、小指(_つきは元情報を格納、_なしはwristからの相対位置を示す)
     Vector3 _left_wrist_pos, _left_index_pos, _left_thumb_pos, _left_middle_pos, _left_pinky_pos;
@@ -52,10 +53,13 @@ public class GestureRecognition : MonoBehaviour {
 
     #endregion
 
+    
 
     // Use this for initialization
     void Start () {
         systemAdmin = SystemAdmin.Instance;   //システムインスタンス(シングルトン)の生成
+        //scoreManager = ScoreManager.Instance;
+
 
         RSManager = GameObject.Find("SenseManager");
         STKManager = RSManager.GetComponent<SenseToolkitManager>();
@@ -205,13 +209,16 @@ public class GestureRecognition : MonoBehaviour {
         Debug.Log("S:" + sum__left_wrist_pos);
         if ( isStackFull && sum__left_wrist_pos > 4.5)
         {
-            Debug.Log("SLASH!!:" + left_wrist_acc.y);
+            Debug.Log("SLASH!!:");
             generateParticle(star_particle_gobj, 0, false);
+            ScoreManager.Instance.AddScore(3);
+
         }
 
         if (ACFValue[0][1] > 0.30 && Mathf.Abs(_left_wrist_pos.y - past_left_wrist_pos.y) > 0.3)
 
         {
+            ScoreManager.Instance.AddScore(3);
             generateParticle(groundLightsBase, 0, false);
         }
         //Debug.Log("Diff:" + Mathf.Abs(_left_wrist_pos.y - past_left_middle_pos.y));
@@ -225,7 +232,9 @@ public class GestureRecognition : MonoBehaviour {
         if ((left_index_pos_angle < 15 /*|| left_index_pos_angle > 75*/)
             && left_thumb_pos_angle > 15) {
             Debug.Log("UpSign!!!");
+            ScoreManager.Instance.AddScore(3);
             generateParticle(RainbowBallBase, 1, false);
+
         }
 
 
