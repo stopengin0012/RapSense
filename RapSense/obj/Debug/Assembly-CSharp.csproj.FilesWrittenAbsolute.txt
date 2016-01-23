@@ -16,3 +16,5 @@
 /Users/Satoshi/Hackathon/RapSense/RapSense/Temp/bin/Debug/Unity.CecilTools.dll
 /Users/Satoshi/Hackathon/RapSense/RapSense/Temp/bin/Debug/Mono.Cecil.Pdb.dll
 /Users/Satoshi/Hackathon/RapSense/RapSense/Temp/bin/Debug/Mono.Cecil.Mdb.dll
+/Users/Satoshi/Hackathon/RapSense/RapSense/Temp/bin/Debug/Assembly-CSharp-firstpass.dll
+/Users/Satoshi/Hackathon/RapSense/RapSense/Temp/bin/Debug/Assembly-CSharp-firstpass.dll.mdb
