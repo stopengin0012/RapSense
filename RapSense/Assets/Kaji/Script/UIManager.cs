@@ -2,10 +2,18 @@
 using System.Collections;
 using UnityEngine.UI;
 
+public enum gameStatus{
+	Playable, End
+}
+
 public class UIManager : MonoBehaviour {
 
 	[SerializeField]
-	private GameObject TitlePanel, Title;
+	private GameObject stageBar;
+	private gameStatus state = gameStatus.Playable;
+
+	[SerializeField]
+	private AudioSource BGM;
 
 	[SerializeField]
 	private GameObject Panel1, Panel2;
@@ -27,16 +35,27 @@ public class UIManager : MonoBehaviour {
 	[SerializeField]
 	private GameObject StageSprite;
 	private Vector3 stageSpriteInitPos;
+	[SerializeField]
+	private GameObject resultImage;
 
-
+	[SerializeField]
 	private bool end2p = false;
 
 	private bool inEnd = false;
 
 	void Start(){
+		iTween.ValueTo(gameObject, iTween.Hash(
+			"from", 100f
+			, "to", 0f
+			, "time", 1f
+			, "onupdate", "SetBarPos"  // 毎フレーム SetAlpha() を呼びます。
+		));
 		stageSpriteInitPos = StageSprite.GetComponent<RectTransform>().localPosition;
 		StartCoroutine(NowStageUIIn());
 		StartCoroutine(GameStartCor());
+	}
+	void SetBarPos(float val){
+		stageBar.GetComponent<RectTransform>().localPosition = new Vector3(0,val,0);
 	}
 	IEnumerator GameStartCor(){
 		yield return new WaitForSeconds(2f);
@@ -44,9 +63,10 @@ public class UIManager : MonoBehaviour {
 	}
 
 	IEnumerator NowStageUIIn(){
-		if(nowStageNum != -1) SetPanel1();
-		yield return new WaitForSeconds(2f);
 		end2p = false;
+		if(nowStageNum != -1) SetPanel1();
+		if(nowPlayer == 0 )	yield return new WaitForSeconds(2f);
+		else yield return new WaitForSeconds(2f);
 		inEnd = true;
 
 		iTween.ValueTo(gameObject, iTween.Hash(
@@ -72,8 +92,6 @@ public class UIManager : MonoBehaviour {
 	}
 
 
-
-	Color col = new Color(255,255,255,0);
 	void Update(){
 		if(inEnd && StageSprite.GetComponent<RectTransform>().localPosition.x == -32.5f){
 			inEnd = false;
@@ -88,8 +106,13 @@ public class UIManager : MonoBehaviour {
 			print(nowStageNum);
 		}
 		if(end2p){
-			NowStageUIIn();
+			print("uiuiui");
 		}
+
+		if(state == gameStatus.End){
+			BGM.volume -= 0.005f;
+		}
+
 	}
 
 	void TurnOnNowStageBar(){
@@ -143,6 +166,15 @@ public class UIManager : MonoBehaviour {
 			, "onupdate", "SetPanelPos1"  // 毎フレーム SetAlpha() を呼びます。
 		));
 	}
+	void SetPanel2(){
+		AudioManager.Instance.PlaySE("shutter");
+		iTween.ValueTo(gameObject, iTween.Hash(
+			"from", 0f
+			, "to", 500f
+			, "time", 1f
+			, "onupdate", "SetPanelPos2"  // 毎フレーム SetAlpha() を呼びます。
+		));
+	}
 	void OutPanel2(){
 		AudioManager.Instance.PlaySE("shutter");
 		iTween.ValueTo(gameObject, iTween.Hash(
@@ -167,6 +199,21 @@ public class UIManager : MonoBehaviour {
 			, "onupdate", "SetPanelPos1"  // 毎フレーム SetAlpha() を呼びます。
 		));
 	}
+	void SetPanelCh2(){
+		AudioManager.Instance.PlaySE("shutter");
+		iTween.ValueTo(gameObject, iTween.Hash(
+			"from", 500f
+			, "to", 0f
+			, "time", 1f
+			, "onupdate", "SetPanelPos2"  // 毎フレーム SetAlpha() を呼びます。
+		));
+		iTween.ValueTo(gameObject, iTween.Hash(
+			"from", 0f
+			, "to", 500f
+			, "time", 1f
+			, "onupdate", "SetPanelPos1"  // 毎フレーム SetAlpha() を呼びます。
+		));
+	}
 
 	void SetPanelPos1(float yPos){
 		Vector3 temp = Panel1.GetComponent<RectTransform>().localPosition;
@@ -182,7 +229,9 @@ public class UIManager : MonoBehaviour {
 	IEnumerator Change2to1(){
 		if(nowPlayer == 2) end2p = true;
 		yield return new WaitForSeconds(3f);
+		print(nowStageNum);
 		OutPanel2();
+
 		TurnOnNowStageBar();
 
 		nowPlayer = 1;
@@ -194,27 +243,85 @@ public class UIManager : MonoBehaviour {
 		StartCoroutine(CountdownCoroutine(textCountdown2));
 	}
 
-	void EndGame(){
+	IEnumerator EndGame(){
+		iTween.ValueTo(gameObject, iTween.Hash(
+			"from", 0f
+			, "to", 100f
+			, "time", 1f
+			, "onupdate", "SetBarPos"  // 毎フレーム SetAlpha() を呼びます。
+		));
+		yield return new WaitForSeconds(1.5f);
 		iTween.ValueTo(gameObject, iTween.Hash(
 			"from", 0f
 			, "to", 1f
 			, "time", 0.5f
 			, "onupdate", "SetEndPos"  // 毎フレーム SetAlpha() を呼びます。
 		));
+		yield return new WaitForSeconds(1f);
+		iTween.ValueTo(gameObject, iTween.Hash(
+			"from", 1f
+			, "to", 100f
+			, "time", 0.5f
+			, "onupdate", "SetEndPos"  // 毎フレーム SetAlpha() を呼びます。
+		));
+		yield return new WaitForSeconds(1.5f);
+		iTween.ValueTo(gameObject, iTween.Hash(
+			"from", 0f
+			, "to", 1f
+			, "time", 1f
+			, "onupdate", "SetResultScale"  // 毎フレーム SetAlpha() を呼びます。
+		));
+		iTween.ValueTo(gameObject, iTween.Hash(
+			"from", 0f
+			, "to", 173f
+			, "time", 1f
+			, "onupdate", "SetResultPos"  // 毎フレーム SetAlpha() を呼びます。
+		));
+		yield return new WaitForSeconds(2f);
+		SetPanel1();
+		yield return new WaitForSeconds(1.5f);
+		if(ScoreManager.Instance.score1p >= ScoreManager.Instance.score2p){
+			AudioManager.Instance.PlaySE("winner");
+		}else{
+			AudioManager.Instance.PlaySE("losser");
+		}
+		yield return new WaitForSeconds(3.5f);
+		SetPanelCh1();
+		yield return new WaitForSeconds(1.5f);
+		if(ScoreManager.Instance.score2p >= ScoreManager.Instance.score1p){
+			AudioManager.Instance.PlaySE("winner");
+		}else{
+			AudioManager.Instance.PlaySE("losser");
+		}
+		yield return new WaitForSeconds(3.5f);
+		if(ScoreManager.Instance.score1p >= ScoreManager.Instance.score1p){
+			SetPanelCh2();
+			AudioManager.Instance.PlaySE("win");
+		}else{
+			AudioManager.Instance.PlaySE("win");
+		}
 	}
 	void SetEndPos(float scaleVal){
 		endTextObj.GetComponent<RectTransform>().localScale = new Vector3(scaleVal,scaleVal,scaleVal);
 	}
-
+	void SetResultScale(float scaleVal){
+		resultImage.GetComponent<RectTransform>().localScale = new Vector3(scaleVal,scaleVal,scaleVal);
+	}
+	void SetResultPos(float moveVal){
+		resultImage.GetComponent<RectTransform>().localPosition = new Vector3(0,moveVal,0);
+	}
 
 	IEnumerator ChangeTurnSpan(float sec){
 		yield return new WaitForSeconds(sec);
 		if(nowPlayer == 1){
 			Change1to2();
 		}else if(nowPlayer != 1 && nowStageNum < 4){
-			StartCoroutine(Change2to1());
+			StartCoroutine(NowStageUIIn());
+			StartCoroutine(GameStartCor());
 		}else{
-			EndGame();
+			OutPanel2();
+			state = gameStatus.End;
+			StartCoroutine(EndGame());
 		}
 	}
 
