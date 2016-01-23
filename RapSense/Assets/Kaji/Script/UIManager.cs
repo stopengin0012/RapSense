@@ -5,6 +5,9 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour {
 
 	[SerializeField]
+	private GameObject TitlePanel, Title;
+
+	[SerializeField]
 	private GameObject Panel1, Panel2;
 	[SerializeField]
 	private int nowPlayer = 0;
@@ -69,7 +72,7 @@ public class UIManager : MonoBehaviour {
 
 
 
-
+	Color col = new Color(255,255,255,0);
 	void Update(){
 		if(inEnd && StageSprite.GetComponent<RectTransform>().localPosition.x == -32.5f){
 			inEnd = false;
