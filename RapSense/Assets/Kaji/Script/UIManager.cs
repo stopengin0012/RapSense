@@ -9,8 +9,7 @@ public class UIManager : MonoBehaviour {
 
 	[SerializeField]
 	private GameObject Panel1, Panel2;
-	[SerializeField]
-	private int nowPlayer = 0;
+	public int nowPlayer = 0;
 	[SerializeField]
 	private Text textCountdown, textCountdown2;
 	[SerializeField]
