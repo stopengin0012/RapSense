@@ -20,12 +20,10 @@ public class UIManager : MonoBehaviour {
 	public int nowPlayer = 0;
 	[SerializeField]
 	private Text textCountdown, textCountdown2;
-	[SerializeField]
-	private GameObject nowText1,nowText2;
+	public GameObject nowText1,nowText2;
 	[SerializeField]
 	private Image[] nowStage;
-	[SerializeField]
-	private int nowStageNum=-1;
+	public int nowStageNum=-1;
 	[SerializeField]
 	private bool endStage = false;
 	[SerializeField]
@@ -38,8 +36,8 @@ public class UIManager : MonoBehaviour {
 	[SerializeField]
 	private GameObject resultImage;
 
-	[SerializeField]
-	private bool end2p = false;
+
+	public bool end2p = false;
 
 	private bool inEnd = false;
 
@@ -63,7 +61,6 @@ public class UIManager : MonoBehaviour {
 	}
 
 	IEnumerator NowStageUIIn(){
-		end2p = false;
 		if(nowStageNum != -1) SetPanel1();
 		if(nowPlayer == 0 )	yield return new WaitForSeconds(2f);
 		else yield return new WaitForSeconds(2f);
@@ -77,6 +74,8 @@ public class UIManager : MonoBehaviour {
 		));
 	}
 	IEnumerator NowStageUIOut(){
+		end2p = false;
+
 		print("in");
 		yield return new WaitForSeconds(1f);
 		print("1");
@@ -104,9 +103,6 @@ public class UIManager : MonoBehaviour {
 			}
 			StageSprite.GetComponent<RectTransform>().localPosition = stageSpriteInitPos;
 			print(nowStageNum);
-		}
-		if(end2p){
-			print("uiuiui");
 		}
 
 		if(state == gameStatus.End){
@@ -227,13 +223,12 @@ public class UIManager : MonoBehaviour {
 	}
 
 	IEnumerator Change2to1(){
-		if(nowPlayer == 2) end2p = true;
+		if(nowPlayer == 2){
+			end2p = true;
+		}
 		yield return new WaitForSeconds(3f);
-		print(nowStageNum);
 		OutPanel2();
-
 		TurnOnNowStageBar();
-
 		nowPlayer = 1;
 			StartCoroutine(CountdownCoroutine(textCountdown));
 	}
