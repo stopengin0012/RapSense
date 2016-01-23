@@ -280,8 +280,8 @@ EllipsoidParticleEmitter:
   serializedVersion: 2
   m_Enabled: 1
   m_Emit: 1
-  minSize: 1
-  maxSize: 1
+  minSize: 0.2
+  maxSize: 0.7
   minEnergy: 3
   maxEnergy: 5
   minEmission: 70
@@ -289,7 +289,7 @@ EllipsoidParticleEmitter:
   worldVelocity: {x: 0, y: -1, z: 0}
   localVelocity: {x: 0, y: 0, z: 0}
   rndVelocity: {x: 0.5, y: 0.5, z: 0}
-  emitterVelocityScale: 0.05
+  emitterVelocityScale: 0.5
   tangentVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: 0
   rndAngularVelocity: 68.61
@@ -307,8 +307,8 @@ EllipsoidParticleEmitter:
   serializedVersion: 2
   m_Enabled: 1
   m_Emit: 1
-  minSize: 1
-  maxSize: 1
+  minSize: 0.2
+  maxSize: 0.7
   minEnergy: 3
   maxEnergy: 5
   minEmission: 70
@@ -316,7 +316,7 @@ EllipsoidParticleEmitter:
   worldVelocity: {x: 0, y: -1, z: 0}
   localVelocity: {x: 0, y: 0, z: 0}
   rndVelocity: {x: 0.5, y: 0.5, z: 0}
-  emitterVelocityScale: 0.05
+  emitterVelocityScale: 0.5
   tangentVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: 0
   rndAngularVelocity: 68.61
@@ -334,8 +334,8 @@ EllipsoidParticleEmitter:
   serializedVersion: 2
   m_Enabled: 1
   m_Emit: 1
-  minSize: 1
-  maxSize: 1
+  minSize: 0.2
+  maxSize: 0.7
   minEnergy: 3
   maxEnergy: 5
   minEmission: 70
@@ -343,7 +343,7 @@ EllipsoidParticleEmitter:
   worldVelocity: {x: 0, y: -1, z: 0}
   localVelocity: {x: 0, y: 0, z: 0}
   rndVelocity: {x: 0.5, y: 0.5, z: 0}
-  emitterVelocityScale: 0.05
+  emitterVelocityScale: 0.5
   tangentVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: 0
   rndAngularVelocity: 68.61
@@ -361,8 +361,8 @@ EllipsoidParticleEmitter:
   serializedVersion: 2
   m_Enabled: 1
   m_Emit: 1
-  minSize: 1
-  maxSize: 1
+  minSize: 0.2
+  maxSize: 0.7
   minEnergy: 3
   maxEnergy: 5
   minEmission: 70
@@ -370,7 +370,7 @@ EllipsoidParticleEmitter:
   worldVelocity: {x: 0, y: -1, z: 0}
   localVelocity: {x: 0, y: 0, z: 0}
   rndVelocity: {x: 0.5, y: 0.5, z: 0}
-  emitterVelocityScale: 0.05
+  emitterVelocityScale: 0.5
   tangentVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: 0
   rndAngularVelocity: 68.61
@@ -532,11 +532,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: minSize
-      value: 1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: maxSize
-      value: 1
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: emitterVelocityScale
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -158,9 +158,9 @@ EllipsoidParticleEmitter:
   m_GameObject: {fileID: 148338}
   serializedVersion: 2
   m_Enabled: 1
-  m_Emit: 1
-  minSize: 0.02
-  maxSize: 0.07
+  m_Emit: 0
+  minSize: 0.2
+  maxSize: 1
   minEnergy: 0.5
   maxEnergy: 3
   minEmission: 50
@@ -185,11 +185,11 @@ EllipsoidParticleEmitter:
   m_GameObject: {fileID: 137390}
   serializedVersion: 2
   m_Enabled: 1
-  m_Emit: 1
-  minSize: 0.02
-  maxSize: 0.07
+  m_Emit: 0
+  minSize: 0.2
+  maxSize: 1
   minEnergy: 0.5
-  maxEnergy: 3
+  maxEnergy: 1
   minEmission: 50
   maxEmission: 60
   worldVelocity: {x: 0, y: 0.2, z: 0}
@@ -295,7 +295,23 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: minSize
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: maxSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: maxEnergy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Emit
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 130104}

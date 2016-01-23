@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using RSUnityToolkit;
+
 
 /// <summary>
 /// 手の動きからジェスチャを認識するクラス
@@ -37,14 +39,26 @@ public class GestureRecognition : MonoBehaviour {
     bool isStackFull = false;
     CalcACF calcACF;
 
-    GameObject heart_particle_gobj, star_particle_gobj; //パーティクル
+    GameObject heart_particle_gobj, star_particle_gobj, Conf,groundLightsBase; //パーティクル
     GameObject[] particle_finger;
+
+    GameObject RSManager;
+    SenseToolkitManager STKManager;
+
+    Camera MainCam;
+    //PXCMSenseManager
+
+
     #endregion
 
 
     // Use this for initialization
     void Start () {
         systemAdmin = SystemAdmin.Instance;   //システムインスタンス(シングルトン)の生成
+
+        RSManager = GameObject.Find("SenseManager");
+        STKManager = RSManager.GetComponent<SenseToolkitManager>();
+        MainCam = GameObject.Find("ImageCam").GetComponent<Camera>();
 
         _lefthand_gobj = new GameObject[4];
         _lefthand_gobj[0] = GameObject.Find("first_left_wrist");
@@ -57,8 +71,13 @@ public class GestureRecognition : MonoBehaviour {
 
 
         particle_finger = new GameObject[4];
-        heart_particle_gobj = Resources.Load("Prehab/Confetti") as GameObject;
-        generateParticle(heart_particle_gobj, 0, true);
+        heart_particle_gobj = Resources.Load("Prehab/Hearts") as GameObject;
+        groundLightsBase = Resources.Load("Prehab/groundLightsBase") as GameObject;
+        star_particle_gobj = Resources.Load("Prehab/Stars") as GameObject;
+        Conf = Resources.Load("Prehab/Confetti") as GameObject;
+
+
+        generateParticle(Conf, 0, true);
     }
 
     //基底遷移アルゴリズムによる加速度計算用配列の初期化
@@ -106,8 +125,21 @@ public class GestureRecognition : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        /*
+        PXCMHandData.IHand handData;
+        STKManager.HandDataOutput.QueryHandData(PXCMHandData.AccessOrderType.ACCESS_ORDER_LEFT_HANDS, 0, out handData);
+        PXCMPointF32 handPoint = handData.QueryMassCenterImage();
+
+        Debug.Log("handPoint:"+handPoint.x +":" +handPoint.y);
+        Vector3 handPoint3D = MainCam.ScreenToWorldPoint(new Vector3(-handPoint.x, -handPoint.y, MainCam.nearClipPlane));
+        */
+
+
         //RealSenseからの直接のデータを取得
         _left_wrist_pos = _lefthand_gobj[0].transform.position;
+        //_lefthand_gobj[0].transform.position = handPoint3D;
+        //_left_wrist_pos = handPoint3D;
+
         _left_thumb_pos = _lefthand_gobj[1].transform.position;
         _left_middle_pos = _lefthand_gobj[2].transform.position;
         _left_pinky_pos = _lefthand_gobj[3].transform.position;
@@ -157,14 +189,19 @@ public class GestureRecognition : MonoBehaviour {
         Debug.Log("ave_y_acc:" + CalcAVE(ACFFIFOStack[0]).y + "ACFValue[0][y]:(" + ACFValue[0][1] + ")");
 
         //if (left_wrist_acc.y > 50 || left_wrist_acc.y < -50) {
-        if (left_wrist_acc.y > 30 || left_wrist_acc.y < -30)
+        if ( isStackFull && (left_wrist_acc.y > 100 || left_wrist_acc.y < -100))
         {
             Debug.Log("SLASH!!");
+            generateParticle(star_particle_gobj, 0, false);
         }
 
-        
-        
-        
+        if (ACFValue[0][0] > 0.30)
+        {
+            generateParticle(groundLightsBase, 0, false);
+        }
+
+
+
     }
 
     //配列の平均を算出するメソッド
@@ -226,14 +263,17 @@ public class GestureRecognition : MonoBehaviour {
             case 0:
                 p_ins = (GameObject)Instantiate(particle_gobj, _left_wrist_pos, Quaternion.identity);
                 if (isContinue) particle_finger[trac] = p_ins;      //追跡する場合、パーティクルを指に登録する
+                //else Destroy(p_ins);
                 break;
             case 1:
                 p_ins = (GameObject)Instantiate(particle_gobj, _left_thumb_pos, Quaternion.identity);
                 if (isContinue) particle_finger[trac] = p_ins;      //追跡する場合、パーティクルを指に登録する
+                //else Destroy(p_ins);
                 break;
             case 2:
                 p_ins = (GameObject)Instantiate(particle_gobj, _left_middle_pos, Quaternion.identity);
                 if (isContinue) particle_finger[trac] = p_ins;      //追跡する場合、パーティクルを指に登録する
+                //else Destroy(p_ins);
                 break;
             case 3:
                 p_ins = (GameObject)Instantiate(particle_gobj, _left_pinky_pos, Quaternion.identity);
