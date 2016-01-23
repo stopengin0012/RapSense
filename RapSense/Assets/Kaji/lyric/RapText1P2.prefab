@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 410eaae6e6c2f4abb959a0d824c82da3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spanTime: 2
+  spanTime: 10
 --- !u!222 &22244262
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -160,7 +160,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: spanTime
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 128758}
