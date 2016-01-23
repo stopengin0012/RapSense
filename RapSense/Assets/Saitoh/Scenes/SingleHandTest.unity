@@ -1304,7 +1304,6 @@ GameObject:
   - 20: {fileID: 1262202600}
   - 124: {fileID: 1262202599}
   - 92: {fileID: 1262202598}
-  - 81: {fileID: 1262202597}
   m_Layer: 5
   m_Name: ImageCam
   m_TagString: Untagged
@@ -1312,13 +1311,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1262202597
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1262202596}
-  m_Enabled: 0
 --- !u!92 &1262202598
 Behaviour:
   m_ObjectHideFlags: 0
@@ -1778,6 +1770,10 @@ Prefab:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 100014, guid: f4fa6f7f4c0ca2a42a271560a466e824, type: 2}
+      propertyPath: m_Name
+      value: first_left_index-tip
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f4fa6f7f4c0ca2a42a271560a466e824, type: 2}
   m_IsPrefabParent: 0
@@ -1792,7 +1788,6 @@ GameObject:
   - 20: {fileID: 2080931675}
   - 92: {fileID: 2080931674}
   - 124: {fileID: 2080931673}
-  - 81: {fileID: 2080931672}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1800,13 +1795,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &2080931672
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2080931671}
-  m_Enabled: 1
 --- !u!124 &2080931673
 Behaviour:
   m_ObjectHideFlags: 0

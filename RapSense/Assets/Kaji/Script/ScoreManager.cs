@@ -16,7 +16,7 @@ public class ScoreManager : SingletonMonoBehaviour<ScoreManager> {
 	 }
  }
 
-	void AddScore(int score){
+	public void AddScore(int score){
 		if(uiManager.nowPlayer == 1){
 			score1p += score;
 		}else if(uiManager.nowPlayer == 2){

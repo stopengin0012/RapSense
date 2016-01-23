@@ -119,7 +119,7 @@ ParticleAnimator:
   force: {x: 0, y: 0, z: 0}
   damping: 1
   stopSimulation: 0
-  autodestruct: 0
+  autodestruct: 1
 --- !u!12 &1273606
 ParticleAnimator:
   m_ObjectHideFlags: 1
@@ -149,7 +149,7 @@ ParticleAnimator:
   force: {x: 0, y: 0, z: 0}
   damping: 1
   stopSimulation: 0
-  autodestruct: 0
+  autodestruct: 1
 --- !u!15 &1506692
 EllipsoidParticleEmitter:
   m_ObjectHideFlags: 1
@@ -159,22 +159,22 @@ EllipsoidParticleEmitter:
   serializedVersion: 2
   m_Enabled: 1
   m_Emit: 1
-  minSize: 0.02
-  maxSize: 0.07
+  minSize: 1
+  maxSize: 3
   minEnergy: 0.5
   maxEnergy: 3
-  minEmission: 50
-  maxEmission: 60
-  worldVelocity: {x: 0, y: 0.2, z: 0}
+  minEmission: 1
+  maxEmission: 5
+  worldVelocity: {x: 0, y: 5, z: 0}
   localVelocity: {x: 0, y: 0, z: 0}
-  rndVelocity: {x: 0.5, y: 0.5, z: 0.5}
+  rndVelocity: {x: 5, y: 5, z: 0.5}
   emitterVelocityScale: 0.05
   tangentVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: 0
   rndAngularVelocity: 111.77
   rndRotation: 1
   Simulate in Worldspace?: 1
-  m_OneShot: 0
+  m_OneShot: 1
   m_Ellipsoid: {x: 0.3, y: 0.3, z: 0.3}
   m_MinEmitterRange: 0
 --- !u!15 &1563870
@@ -186,22 +186,22 @@ EllipsoidParticleEmitter:
   serializedVersion: 2
   m_Enabled: 1
   m_Emit: 1
-  minSize: 0.02
-  maxSize: 0.07
+  minSize: 1
+  maxSize: 3
   minEnergy: 0.5
   maxEnergy: 3
-  minEmission: 50
-  maxEmission: 80
-  worldVelocity: {x: 0, y: 0.63, z: 0}
+  minEmission: 1
+  maxEmission: 5
+  worldVelocity: {x: 0, y: 5, z: 0}
   localVelocity: {x: 0, y: 0, z: 0}
-  rndVelocity: {x: 0.5, y: 0.5, z: 0.5}
+  rndVelocity: {x: 5, y: 5, z: 0.5}
   emitterVelocityScale: 0.05
   tangentVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: 0
   rndAngularVelocity: 111.77
   rndRotation: 1
   Simulate in Worldspace?: 1
-  m_OneShot: 0
+  m_OneShot: 1
   m_Ellipsoid: {x: 0.3, y: 0.3, z: 0.3}
   m_MinEmitterRange: 0
 --- !u!26 &2625054
@@ -293,7 +293,51 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: minSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: maxSize
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: minEmission
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: maxEmission
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: worldVelocity.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: rndVelocity.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: rndVelocity.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Emit
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: Simulate in Worldspace?
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_OneShot
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: autodestruct
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 190256}
