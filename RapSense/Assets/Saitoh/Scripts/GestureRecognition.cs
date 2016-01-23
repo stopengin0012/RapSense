@@ -77,7 +77,7 @@ public class GestureRecognition : MonoBehaviour {
         Conf = Resources.Load("Prehab/Confetti") as GameObject;
 
 
-        generateParticle(Conf, 0, true);
+        generateParticle(heart_particle_gobj, 0, true);
     }
 
     //基底遷移アルゴリズムによる加速度計算用配列の初期化
